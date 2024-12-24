@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- JQuery 설정 -->
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>  
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">    
+       
+    <!-- datepicker 설정 -->
+        <script src="../../public/datepicker.js" ></script>    
+        <style>
+            /*datepicer 버튼 롤오버 시 손가락 모양 표시*/
+            .ui-datepicker-trigger{cursor: pointer;}
+            /*datepicer input 롤오버 시 손가락 모양 표시*/
+            .hasDatepicker{cursor: pointer;}
+        </style>
+
+        <style>
+            .top_container { display:flex;     width:1250px; height:100px; margin:0 auto; justify-content:center; align-items:center; background-color: antiquewhite;}
+            .middle_container {  display:flex; width:1250px; height:700px; margin:0 auto; justify-content:center; align-items:flex-start;  }
+               .left_menu {  display:flex;     width:200px;  height:700px;                flex-direction:column; justify-content:flex-start; align-items:center; background-color:darkgray; }
+               .right_container{ display:flex; width:1050px;  height:700px;                flex-direction:column; justify-content:flex-start; align-items:center; background-color:aliceblue;}
+            .bottom_container { display:flex;  width:1250px; height:100px; margin:0 auto;  background-color: dimgray;}
+        </style>   
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+<body style="overflow-y: scroll; margin:0;">
+    <div style="border:1px solid orange;">      
+    
+        <div class="top_container" >
+            <table>
+              <tr>
+                <td>        
+                  <nav>
+                    <a href="/">메인화면</a>
+                    &nbsp; &nbsp;&nbsp;&nbsp;                   
+
+                    <a href="/smis/main">SMIS</a>                   
+                    &nbsp;&nbsp;&nbsp;&nbsp; 
+
+                    <a href="http://14.33.247.246/">커뮤니티</a>&nbsp;                      
+                  </nav>          
+                </td>              
+                <td style="width:350px; text-align: center;">
+                     <a href="/real_estate">공공DB(아파트 실거래)</a>
+                </td>            
+                <td style="text-align: right;">
+                   <% if(locals.locals_userId) { %>
+                      <%= locals.locals_userName %>(<%= locals.locals_userId %>)님 반갑습니다.&nbsp;<a href="/account/login/logout">[로그아웃]</a>
+                   <% } else { %>
+                      <a href="/account/login">[로그인]</a>
+                   <% } %>
+                </td>
+              </tr>
+            </table>
+        </div>
+    
+    
+       
+    
+        <div class="middle_container" >
+              <div class="left_menu" >
+                        <table>
+                          <tr>                          
+                              <td style="text-align: center;" >
+                                  <h1>5월</h1>                                  
+                              </td>
+                          </tr>
+                          <tr>
+                              <td style="text-align: left;">
+                                  <input type="button" value="신규 접수" 
+                                   onclick="javascript:location.href='/smis/content';"
+                                   style="height: 40px; width: 110px;">
+                              </td>                          
+                          </tr>
+                      </table>                                                                       
+              </div>
+    
+    
+    
+    
+    
+    
+            <div class="right_container" > 
+            
+            
+                    <table >
+                        <tr style="height: 30px;">
+                            <td style="width:100px;"><a id="receipt" href="/smis/content">신규접수</a></td>
+                            <td style="width:100px;"><a id="receiptList" href="#">접수현황</a></td>
+                            <td style="width:100px;"><a id="processedList" href="">완료현황</a></td>
+                            <td style="width:100px;"><a id="chartList" href="">차트보기</a></td>
+                        </tr>
+                    </table>                                    
+                    <script>
+                        var currentDate = new Date()
+                        var year = currentDate.getFullYear()  
+                        var month =('0' + (currentDate.getMonth() + 1)).slice(-2)
+                        var fromDate = year + '-' + month + '-' + '01'    
+                        
+                        var userDate = new Date(year, currentDate.getMonth()+1,0)
+                        var userYear =  userDate.getFullYear()
+                        var userMonth = ('0' + ( userDate.getMonth() + 1)).slice(-2)        
+                        var userToDay = userDate.getDate()          
+                        var toDate = userYear + '-' + userMonth + '-' + userToDay    
+                    
+                        var receiptLink = `/smis/list?pageIndex=1&state=1&departmentCode=LEB1&userId=1090630&fromDate=${fromDate}&toDate=${toDate}`
+                        document.getElementById('receiptList').setAttribute('href',receiptLink)
+                    
+                        var processedLink = `/smis/list?pageIndex=1&state=3&departmentCode=LEB1&userId=1090630&fromDate=${fromDate}&toDate=${toDate}`
+                        document.getElementById('processedList').setAttribute('href',processedLink)  
+                        
+                        var chartLink = `/smis/chart?chartType=line&state=3&departmentCode=LEB1&userId=1090630&fromDate=${fromDate}&toDate=${toDate}`
+                        document.getElementById('chartList').setAttribute('href',chartLink)  
+                    </script>
+                    
+
+                    
+                            <%- body %>
+
+
+
+
+                    </div>              
+        </div>
+    
+        
+    
+    
+        
+        <div class="bottom_container"  ></div>
+      
+    
+    
+    
+    
+    
+    
+    
+    
+        
+    
+    </div>    
+    </body>
+</html>

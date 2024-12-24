@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<!---------------------------------------------------------------------------------------------->
+    <!-- JQuery 기본 설정 -->     
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+    <!-- JQuery 기본 설정 -->
+  
+
+
+    <script>
+        function chkIsIdExists() {                                  
+            if(document.getElementById('txtId').value == ''){
+                alert('사번(ID)를 입력해 주세요')
+                document.getElementById('txtId').focus()
+                return;
+            }
+            
+            var id = document.getElementById('txtId').value
+            
+            fetch('/account/createMember/isIdExists',{
+                method: 'POST',
+                headers: {
+                'Content-Type':'application/json'
+                },
+                body: JSON.stringify({                
+                    'id':id                              
+                })
+            }).then((res)=>res.json()).then((data)=>{            
+
+                                            const isIdExists = data.isIdExists
+                                            const id = data.id
+                                            alert()
+                                            if(isIdExists){
+                                                // true: ID 사용중
+                                                //alert(`${data.id}는 사용중인 ID입니다.`)
+                                                //document.getElementById('txtId').value = ''
+                                                $('#isExistsResult').css('display','inline')
+                                                $('#isExistsResult').css('color','red')
+                                                $('#isExistsResult').text('이미 사용중인 ID입니다.')                                                
+                                                document.getElementById('txtId').focus()
+
+                                            } else{ 
+                                                // false: ID 사용 가능
+                                                //alert(`${data.id}는 사용 가능한 ID입니다.`)
+                                               
+                                                $('#isExistsResult').css('display','inline')
+                                                $('#isExistsResult').css('color','blue')
+                                                $('#isExistsResult').text(`${data.id}사용 가능한 ID입니다..`)  
+                                                document.getElementById('hidisExistsId').value = data.id 
+                                                document.getElementById('txtpassword').focus()
+                                            }
+                                        })
+            
+        }
+
+       
+       
+        
+      
+        
+        function nextFocus(control) {
+            if(event.keyCode==13) {
+                document.getElementById(control).focus();
+            }
+        }
+
+
+
+        //////// chkValueforControls() 컨트롤 검사 후 이상 없으면 submit   //////////////////////////////           
+function chkValueforControls(){
+            if(document.getElementById('txtId').value == ''){
+                alert('사번(ID)를 입력해 주세요')
+                document.getElementById('txtId').focus()
+                return
+            }
+            if(document.getElementById('txtId').value.length != 7){
+                alert('사번(ID)는 7글자로 입력해 주세요.')
+                document.getElementById('txtId').focus()
+                return
+            }
+            if(document.getElementById('txtId').value != document.getElementById('hidisExistsId').value ){
+                alert('ID중복검사를 해주세요')  // 사번(ID)에 입력된 값과 중복검사된 ID값이 서로 다름
+                document.getElementById('txtId').focus()
+                //document.getElementById('txtId').value = ''
+                document.getElementById('isExistsIbefore').innerHTML = 'ID중복검사를 해주세요'
+                return
+            }
+
+
+            if(document.getElementById('txtpassword').value == ''){
+                alert('비밀번호를 입력해 주세요')
+                document.getElementById('txtpassword').focus()
+                return
+            }
+            if(document.getElementById('txtpassword2').value == ''){
+                alert('비밀번호 재확인을 입력해 주세요')
+                document.getElementById('txtpassword2').focus()
+                return
+            }
+            if(document.getElementById('txtpassword').value != document.getElementById('txtpassword2').value){
+                alert('비밀번호가 서로 다릅니다. 비밀번호를 동일하게 입력해 주세요')
+                document.getElementById('txtpassword').focus()
+                return
+            }
+            if(document.getElementById('txtpassword').value.length != 4){
+                alert('비밀번호는 4글자로 입력해 주세요.')
+                document.getElementById('txtpassword').focus()
+                return
+            }
+
+            if(document.getElementById('txtuserName').value == ''){
+                alert('이름을 입력해 주세요')
+                document.getElementById('txtuserName').focus()
+                return
+            }
+            if(document.getElementById('txtSearchDepartment').value == ''){
+                alert('부서명을 입력해 주세요')
+                document.getElementById('txtSearchDepartment').focus()
+                return
+            }
+            if((document.getElementById('txtDepartmentCode').value == '')||(document.getElementById('txtDepartmentName').value == '')){
+                alert('부서명을 입력해 주세요')
+                document.getElementById('txtSearchDepartment').focus()
+                return
+            }
+            
+            if(document.getElementById('txthp1').value == ''){
+                alert('HP(휴대폰)을 입력해 주세요')
+                document.getElementById('txthp1').focus()
+                return
+            }
+            if(document.getElementById('txthp2').value == ''){
+                alert('HP(휴대폰)을 입력해 주세요')
+                document.getElementById('txthp2').focus()
+                return
+            }
+            if(document.getElementById('txthp3').value == ''){
+                alert('HP(휴대폰)을 입력해 주세요')
+                document.getElementById('txthp3').focus()
+                return
+            }
+            if(document.getElementById('txtemail').value == ''){
+                alert('이메일을 입력해 주세요')
+                document.getElementById('txtemail').focus()
+                return
+            }
+
+            var regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+            // var regex1 = '/\S+@\S+\.\S+/'
+            if(!regex.test(document.getElementById('txtemail').value)) {
+               alert('이메일 주소 오류')
+               return
+            }
+
+            if(document.getElementById('txtregion').value == ''){
+                alert('담당구역을 입력해 주세요')
+                document.getElementById('txtregion').focus()
+                return
+            }
+            
+            return true;
+        }
+
+
+
+
+    
+
+
+$(document).ready(function(){
+            // $('#sltDepartmentList').on('change',function() {
+            //     $('#txtdepartmentName').val($('#sltDepartmentList option:selected').attr('value'))
+            //     $('#txtdepartmentCode').val($('#sltDepartmentList option:selected').val())
+            //     $('#txtdepartmentName').val($('#sltDepartmentList option:selected').text())
+            //     $('#sltDepartmentList').css('display','none')
+            //     $('#txthp').focus()
+            
+            // })
+        $('#txtId').focus()
+
+        var availableTags = [
+            "GJCT 광주센타",
+            "LEB1 서울센타",
+            "LED1 대전센타",
+            "LED3 광주센타",
+            "LED4 전주센타",
+            "LEE1 부산센타",
+            "LEE4 울산센타",
+            "LEE5 대구센타",
+            "L900 경인센타"
+        ];
+
+        $("#txtSearchDepartment").click(function(){
+            $("#txtSearchDepartment").val('')
+            $("#txtDepartmentCode").val('')
+            $("#txtDepartmentName").val('')
+        })
+
+        $("#txtSearchDepartment").autocomplete({
+                source: availableTags ,
+                change: function(event,ui) { // 메뉴에서 키보드로 선택했을 경우와 모든 이벤트 발생 후 마지막에 동작
+                    // Triggered when the field is blurred, if the value has changed.
+                    // document.getElementById('txtDepartmentCode').value = ui.item.value.substring(0,7)
+                    // document.getElementById('txtDepartmentName').value = ui.item.value.substring(0,7)  
+                    // alert('change')
+                    // alert(ui.item.value)  
+                    document.getElementById('txtDepartmentCode').value = ui.item.value.substring(0,4)
+                    document.getElementById('txtDepartmentName').value = ui.item.value.substring(5)                      
+                },            
+                select: function(event, ui) {  // 메뉴에서 마우스로 선택했을 경우
+                    //alert(ui.item.value)           
+                    //alert('select')                                               
+                    //document.getElementById('txthp2').focus()                   
+                },
+                focus: function(event, ui){                  
+                    // document.getElementById('txtDepartmentCode').value = ui.item.value.substring(0,4)
+                    // document.getElementById('txtDepartmentName').value = ui.item.value.substring(5)  
+
+                }
+        });
+
+
+
+        $("#btnSubmit").click(function(){                                    
+                
+                // $('#contentForm').attr('action','/smis/content/saveReceipt')
+                if(chkValueforControls()) {
+                    $("#createUserForm").submit(); // Submit the form                                
+                }
+                
+        })
+
+})
+
+        
+
+
+
+
+
+
+
+       
+   
+    </script>
+</head>
+<body>
+<div style="width:100%;">   
+             
+   
+<div style="width:600px; margin: 0 auto;">
+
+<br>
+<fieldset style="width: 700px; border-radius:5px; ">
+<legend>회원가입</legend>    
+
+  <br>
+  <br>
+  <form id="createUserForm" action="/account/createUserUp" method="post"> 
+    
+
+   
+ <style>
+        tr{height:45px;}
+          .td1{width: 150px; text-align: right; padding:3px; }
+          .td2{width: 500px; text-align: left; padding:3px; }
+ </style>
+<script>
+      function focusControl12(id){                                    
+              document.getElementById(id).style.backgroundColor = '#F0F8FF'               
+              //document.getElementById(id).style.borderColor = '#000080'                        
+              return false
+       }
+       function blurControl12(id){                           
+            document.getElementById(id).style.backgroundColor = 'white'            
+            document.getElementById(id).style.borderStyle = 'solid'
+            document.getElementById(id).style.borderWidth = '1px'
+            //document.getElementById(id).style.borderColor = ''                               
+            return false
+       }          
+</script>
+          
+
+
+
+        <table>
+            <tr >
+                <td class="td1" >사번(ID)</td>
+                <!-- oninput="this.value = this.value.replace(/[^0-9A-Z]/g, '');" -->
+                <td class="td2" >
+                    <input type="text" id="txtId" name="txtId" 
+                            maxlength="7" placeholder="숫자 또는 영문(대문자)) ,7글자" 
+                            style="width: 200px; height: 30px;"                           
+                            onfocus="focusControl12(this.id)"
+                            onblur="blurControl12(this.id)"     
+                            onkeydown="nextFocus('txtpassword')" 
+                            oninput="this.value = this.value.replace(/[^0-9A-Z]/g, '');"  
+                                                                    
+                    >                
+                    <input type="hidden" id="hiddenIsIdExists" value="false" >
+                    <input type="button" value="중복검사" style="width: 100px; height: 35px;" onclick="chkIsIdExists()" >               
+                    
+                    <input type="hidden" id="hidisExistsId" >                
+                    <span id="isExistsResult" style="font-size:9pt;"></span>
+                    
+
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">비밀번호</td>
+                <td class="td2">
+                    <input type="password" id="txtpassword"  name="txtpassword" 
+                            maxlength="4" placeholder="숫자(4글자)" 
+                            style="width: 200px; height: 30px;"
+                            onfocus="focusControl12(this.id)"
+                            onblur="blurControl12(this.id)"
+                            onkeydown="nextFocus('txtpassword2')" 
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');"  
+                    >         
+                    
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">비밀번호 재확인</td>
+                <td class="td2">
+                    <input type="password" id="txtpassword2" name="txtpassword2" 
+                        maxlength="4" placeholder="숫자(4글자)" 
+                        style="width: 200px; height: 30px;"
+                        onfocus="focusControl12(this.id)"
+                        onblur="blurControl12(this.id)"                          
+                        onkeydown="nextFocus('txtuserName')" 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"  
+                    >
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">이름</td>
+                <td class="td2" >
+                    <input type="text" id="txtuserName" name="txtuserName" 
+                        maxlength="10" placeholder="이름" 
+                        style="width: 150px; height: 30px;"
+                        onfocus="focusControl12(this.id)"
+                        onblur="blurControl12(this.id)"                          
+                        onkeydown="nextFocus('txtSearchDepartment')"                        
+                    >
+                </td>
+            </tr>
+
+            <tr>
+                <td class="td1">부서명</td>
+                <td class="td2">
+                    <input type="text" id="txtSearchDepartment"  
+                        maxlength="4"  placeholder="이곳에 'L'을 입력해 주세요" 
+                        style="width: 150px; height: 30px;"
+                        onfocus="focusControl12(this.id)"
+                        onblur="blurControl12(this.id)"
+                        onkeydown="nextFocus('txthp1')" 
+                    >
+               
+                    <input type="text" id="txtDepartmentCode" name="txtDepartmentCode" style="width:50px; display:none;" >
+                    <input type="text" id="txtDepartmentName" name="txtDepartmentName" style="width:50px; display:none;" >                
+                </td>
+            </tr>
+        
+            <tr>
+                <td class="td1">HP</td>
+                <td class="td2">
+                    <input type="text" id="txthp1" name="txthp1" value="010" 
+                        readonly  
+                        style="width: 50px; height: 30px;"
+                        onfocus="focusControl12(this.id)"
+                        onblur="blurControl12(this.id)"
+                        onkeydown="nextFocus('txthp2')"
+                    >
+                    <input type="text" id="txthp2" name="txthp2" 
+                        maxlength="4" placeholder=""
+                        style="width: 100px; height: 30px;"
+                        onfocus="focusControl12(this.id)"
+                        onblur="blurControl12(this.id)"                           
+                        onkeydown="nextFocus('txthp3')" 
+                    >
+                    <input type="text" id="txthp3" name="txthp3" 
+                        maxlength="4" placeholder="" 
+                        style="width: 100px; height: 30px;"
+                        onfocus="focusControl12(this.id)"
+                        onblur="blurControl12(this.id)"                                                      
+                        onkeydown="nextFocus('txtemail')" 
+                    >
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">E-Mail</td>
+                <td class="td2">
+                    <input type="text" id="txtemail" name="txtemail" 
+                            maxlength="30" placeholder="이멜일 주소"
+                            style="width: 200px; height: 30px;"
+                            onfocus="focusControl12(this.id)"
+                            onblur="blurControl12(this.id)"  
+                            onkeydown="nextFocus('txtregion')" 
+                    >
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">담당구역</td>
+                <td class="td2">
+                    <input type="text" id="txtregion" name="txtregion" 
+                        maxlength="60" placeholder="ex) 서울,경기" 
+                        style="width: 450px; height: 30px;"
+                        onfocus="focusControl12(this.id)"
+                        onblur="blurControl12(this.id)"                          
+                        onkeydown="nextFocus('txtcontent')" 
+                    >
+                
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">메모</td>
+                <td class="td2">
+                    <textarea id="txtcontent" name="txtcontent" 
+                            rows="5" placeholder="메모" 
+                            style="width:450px;"
+                            onfocus="focusControl12(this.id)"
+                            onblur="blurControl12(this.id)"     
+                    ></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;">                
+                    <br><input type="button" id="btnSubmit" style="width: 150px; height: 35px;" value="회원가입" >
+                </td>
+            </tr>
+        </table>      
+  </form>
+
+  <br>
+  <br>
+</fieldset>
+</div>
+
+
+
+</div>
+</body>
+</html>
+
+
+
